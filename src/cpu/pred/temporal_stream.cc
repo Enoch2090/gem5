@@ -50,6 +50,9 @@ namespace gem5
             for (int i = 0; i < bufferSize; ++i)
                 circularBuffer[i] = HTB_INIT;
             DPRINTF(TemporalStream, "Initialized successfully\n");
+            DPRINTF(TemporalStream, "basePredictor: %p\n", basePredictor);
+            DPRINTF(TemporalStream,
+            "basePredictor: %d\n", basePredictor->takenUsed);
         }
 
         void TemporalStreamBP::btbUpdate(
@@ -163,9 +166,7 @@ namespace gem5
                 headTable[tid] = bufferTail;
             }
             // history->baseHistory deleted during basePredictor->update
-            DPRINTF(TemporalStream, "Before delete history \n");
-            delete history;
-            DPRINTF(TemporalStream, "After delete history \n");
+            delete history
             DPRINTF(TemporalStream, "Exit update \n");
         }
 
