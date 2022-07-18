@@ -51,8 +51,9 @@ namespace gem5
                 circularBuffer[i] = HTB_INIT;
             DPRINTF(TemporalStream, "Initialized successfully\n");
             DPRINTF(TemporalStream, "basePredictor: %p\n", basePredictor);
+            // check whether the basePredictor is correcly initialized
             DPRINTF(TemporalStream,
-            "basePredictor: %d\n", basePredictor->takenUsed);
+            "basePredictor: %d\n", basePredictor->choiceHistoryMask);
         }
 
         void TemporalStreamBP::btbUpdate(
