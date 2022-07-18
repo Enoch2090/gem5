@@ -762,8 +762,8 @@ class MultiperspectivePerceptronTAGE8KB(MultiperspectivePerceptronTAGE):
     loop_predictor = MPP_LoopPredictor_8KB()
     statistical_corrector = MPP_StatisticalCorrector_8KB()
 
-class TemporalStreamPredictor(BranchPredictor):
-    type = 'TemporalStream'
+class TemporalStreamBP(BranchPredictor):
+    type = 'TemporalStreamBP'
     cxx_class = 'gem5::branch_prediction::TemporalStreamBP'
     cxx_header = "cpu/pred/temporal_stream.hh"
 
