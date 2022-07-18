@@ -117,7 +117,9 @@ namespace gem5
                 inst, corrTarget
             );
 
-            circularBuffer[++bufferTail] = (history->baseOutcome==taken);
+            circularBuffer[
+                ++bufferTail%bufferSize
+            ] = (history->baseOutcome==taken);
 
             if (history->tsOutcome != taken)
                 replayFlag = false;
