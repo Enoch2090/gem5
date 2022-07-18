@@ -77,7 +77,7 @@ namespace gem5
             if (replayFlag && circularBuffer[bufferHead++%bufferSize]==0)
                 tsOutcome = !baseOutcome;
             else
-                tsOutcome = !baseOutcome;
+                tsOutcome = baseOutcome;
 
             history->baseOutcome = baseOutcome;
             history->tsOutcome = tsOutcome;
