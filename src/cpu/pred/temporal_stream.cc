@@ -6,7 +6,15 @@
 #include "base/intmath.hh"
 
 #define HTB_INIT 2
-
+/*
+note:
+    - btbUpdate, uncondBranch, update & squash all takes a void* bp_history,
+      recast it as TSHistory object, and reads info from it.
+    - lookup takes a void* bp_history, allocates a new TSHistory and save
+      it to bp_history.
+    - since we use a base predictor, we use TSHistory->baseHistory to
+      function as bp_history for the base predictor.
+*/
 namespace gem5
 {
 
@@ -109,6 +117,11 @@ namespace gem5
             if (history->tsOutcome != taken)
                 replayFlag = false;
             if (baseOutcome != taken) {
+                // FIXME: should we concatenate tid with
+                // something in the GHR here?
+                // in that case might need to change the header:
+                // std::map<ThreadID, unsigned> headTable;
+                // => std::map<SOME_CONCAT_TYPE, unsigned> headTable;
                 iter = headTable.find(tid)
                 if (
                     (iter!=headTable.end())
