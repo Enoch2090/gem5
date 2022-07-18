@@ -103,8 +103,13 @@ namespace gem5
         {
             DPRINTF(TemporalStream, "Enter uncondBranch \n");
             TSHistory *history = new TSHistory;
-            void *baseHistory = (history->baseHistory);
-            basePredictor->uncondBranch(tid, pc, baseHistory);
+            history->baseOutcome = true;
+            history->tsOutcome = true;
+            // void *baseHistory = (history->baseHistory);
+            bp_history = history;
+            basePredictor->uncondBranch(tid, pc, history->baseHistory);
+            DPRINTF(TemporalStream, "TShistory %p\n", history);
+            DPRINTF(TemporalStream, "baseHistory %p\n", history->baseHistory);
             DPRINTF(TemporalStream, "Exit uncondBranch \n");
         }
 
@@ -119,23 +124,22 @@ namespace gem5
         )
         {
             DPRINTF(TemporalStream, "Enter update \n");
-            TSHistory *history = static_cast<TSHistory *>(bp_history);
-            void *baseHistory = (history->baseHistory);
-            DPRINTF(TemporalStream, "baseHistory: %p\n", baseHistory);
             DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
+            TSHistory *history = static_cast<TSHistory *>(bp_history);
+            DPRINTF(TemporalStream, "baseHistory: %p\n", history->baseHistory);
 
-            assert(baseHistory);
+            assert(history->baseHistory);
 
             basePredictor->update(
                 tid, branch_addr, taken,
-                baseHistory, squashed,
+                history->baseHistory, squashed,
                 inst, corrTarget
             );
-            DPRINTF(TemporalStream, "basePredictor update complete");
+            DPRINTF(TemporalStream, "basePredictor update complete\n");
             circularBuffer[
                 ++bufferTail%bufferSize
             ] = (history->baseOutcome==taken);
-            DPRINTF(TemporalStream, "circularBuffer update complete");
+            DPRINTF(TemporalStream, "circularBuffer update complete\n");
 
             if (history->tsOutcome != taken)
                 replayFlag = false;
