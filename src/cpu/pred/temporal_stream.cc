@@ -122,7 +122,7 @@ namespace gem5
                 // in that case might need to change the header:
                 // std::map<ThreadID, unsigned> headTable;
                 // => std::map<SOME_CONCAT_TYPE, unsigned> headTable;
-                auto iter = headTable.find(tid)
+                auto iter = headTable.find(tid);
                 if (
                     (iter!=headTable.end())
                  && (!replayFlag)
