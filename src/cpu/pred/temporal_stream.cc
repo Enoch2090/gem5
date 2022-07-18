@@ -8,12 +8,13 @@
 #define HTB_INIT 2
 /*
 note:
-    - btbUpdate, uncondBranch, update & squash all takes a void* bp_history,
-      recast it as TSHistory object, and reads info from it.
-    - lookup takes a void* bp_history, allocates a new TSHistory and save
-      it to bp_history.
-    - since we use a base predictor, we use TSHistory->baseHistory to
-      function as bp_history for the base predictor.
+- btbUpdate, update & squash all takes a void* bp_history,
+    recast it as TSHistory object, and reads info from it.
+- uncondBranch, lookup takes a void* bp_history,
+allocates a new TSHistory and save
+    it to bp_history.
+- since we use a base predictor, we use TSHistory->baseHistory to
+    function as bp_history for the base predictor.
 */
 namespace gem5
 {
@@ -47,11 +48,8 @@ namespace gem5
             void*& bp_history
         )
         {
-            void *baseHistory;
-            if (bp_history){
-                TSHistory *history = static_cast<TSHistory *>(bp_history);
-                baseHistory = (history->baseHistory);
-            }
+            TSHistory *history = static_cast<TSHistory *>(bp_history);
+            void *baseHistory = (history->baseHistory);
 
             basePredictor->btbUpdate(tid, branch_addr, baseHistory);
         }
@@ -87,12 +85,8 @@ namespace gem5
             void*& bp_history
         )
         {
-            void *baseHistory;
-            if (bp_history){
-                TSHistory *history = static_cast<TSHistory *>(bp_history);
-                baseHistory = (history->baseHistory);
-            }
-
+            TSHistory *history = new TSHistory;
+            void *baseHistory = (history->baseHistory);
             basePredictor->uncondBranch(tid, pc, baseHistory);
         }
 
@@ -148,13 +142,11 @@ namespace gem5
             void* bp_history
         )
         {
-            void *baseHistory;
-            if (bp_history){
-                TSHistory *history = static_cast<TSHistory *>(bp_history);
-                baseHistory = (history->baseHistory);
-            }
+            TSHistory *history = static_cast<TSHistory *>(bp_history);
+            void *baseHistory = (history->baseHistory);
 
             basePredictor->squash(tid, baseHistory);
+            delete history;
         }
 
     } // namespace branch_prediction
