@@ -47,9 +47,11 @@ namespace gem5
             void*& bp_history
         )
         {
-            assert(bp_history);
-            TSHistory *history = static_cast<TSHistory *>(bp_history);
-            void *baseHistory = (history->baseHistory);
+            void *baseHistory;
+            if (bp_history){
+                TSHistory *history = static_cast<TSHistory *>(bp_history);
+                baseHistory = (history->baseHistory);
+            }
 
             basePredictor->btbUpdate(tid, branch_addr, baseHistory);
         }
@@ -85,9 +87,11 @@ namespace gem5
             void*& bp_history
         )
         {
-            assert(bp_history);
-            TSHistory *history = static_cast<TSHistory *>(bp_history);
-            void *baseHistory = (history->baseHistory);
+            void *baseHistory;
+            if (bp_history){
+                TSHistory *history = static_cast<TSHistory *>(bp_history);
+                baseHistory = (history->baseHistory);
+            }
 
             basePredictor->uncondBranch(tid, pc, baseHistory);
         }
@@ -102,9 +106,11 @@ namespace gem5
             Addr corrTarget
         )
         {
-            assert(bp_history);
-            TSHistory *history = static_cast<TSHistory *>(bp_history);
-            void *baseHistory = (history->baseHistory);
+            void *baseHistory;
+            if (bp_history){
+                TSHistory *history = static_cast<TSHistory *>(bp_history);
+                baseHistory = (history->baseHistory);
+            }
 
             basePredictor->update(
                 tid, branch_addr, taken,
@@ -143,9 +149,11 @@ namespace gem5
             void* bp_history
         )
         {
-            assert(bp_history);
-            TSHistory *history = static_cast<TSHistory *>(bp_history);
-            void *baseHistory = (history->baseHistory);
+            void *baseHistory;
+            if (bp_history){
+                TSHistory *history = static_cast<TSHistory *>(bp_history);
+                baseHistory = (history->baseHistory);
+            }
 
             basePredictor->squash(tid, baseHistory);
         }
