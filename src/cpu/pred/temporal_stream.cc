@@ -106,11 +106,10 @@ namespace gem5
             Addr corrTarget
         )
         {
-            void *baseHistory;
-            if (bp_history){
-                TSHistory *history = static_cast<TSHistory *>(bp_history);
-                baseHistory = (history->baseHistory);
-            }
+
+            TSHistory *history = static_cast<TSHistory *>(bp_history);
+            void *baseHistory = (history->baseHistory);
+            assert(baseHistory);
 
             basePredictor->update(
                 tid, branch_addr, taken,
