@@ -61,9 +61,11 @@ namespace gem5
             DPRINTF(TemporalStream, "Enter btbUpdate \n");
             // TSHistory *history = static_cast<TSHistory *>(bp_history);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
-            void *baseHistory = (history->baseHistory);
-
-            basePredictor->btbUpdate(tid, branch_addr, baseHistory);
+            basePredictor->btbUpdate(
+                tid,
+                branch_addr,
+                history->baseHistory
+            );
             DPRINTF(TemporalStream, "Exit btbUpdate \n");
 
         }
@@ -76,11 +78,10 @@ namespace gem5
         {
             DPRINTF(TemporalStream, "Enter lookup \n");
             TSHistory *history = new TSHistory;
-            void* baseHistory;
             bool baseOutcome = basePredictor->lookup(
-                tid, branch_addr, baseHistory
+                tid, branch_addr, history->baseHistory
             );
-            history->baseHistory = baseHistory;
+
             bool tsOutcome;
 
             if (replayFlag && circularBuffer[bufferHead++%bufferSize]==0)
@@ -106,8 +107,8 @@ namespace gem5
             history->baseOutcome = true;
             history->tsOutcome = true;
             // void *baseHistory = (history->baseHistory);
-            bp_history = history;
             basePredictor->uncondBranch(tid, pc, history->baseHistory);
+            bp_history = (void *)history;
             DPRINTF(TemporalStream, "TShistory %p\n", history);
             DPRINTF(TemporalStream, "baseHistory %p\n", history->baseHistory);
             DPRINTF(TemporalStream, "Exit uncondBranch \n");
@@ -161,7 +162,7 @@ namespace gem5
                 }
                 headTable[tid] = bufferTail;
             }
-
+            // history->baseHistory deleted during basePredictor->update
             delete history;
             DPRINTF(TemporalStream, "Exit update \n");
         }
@@ -173,9 +174,11 @@ namespace gem5
         {
             DPRINTF(TemporalStream, "Enter squash \n");
             TSHistory *history = static_cast<TSHistory *>(bp_history);
-            void *baseHistory = (history->baseHistory);
 
-            basePredictor->squash(tid, baseHistory);
+            basePredictor->squash(
+                tid,
+                history->baseHistory
+            );
             delete history;
             DPRINTF(TemporalStream, "Exit squash \n");
         }
