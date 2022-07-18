@@ -775,6 +775,6 @@ class TemporalStreamBP(BranchPredictor):
 
     # max size of unsigned int in cpp. hopefully that works as "inf".
     circular_buffer_size = Param.Unsigned(
-        4_294_967_295,
+        65536,
         "Max size of the circular replay buffer"
     )
