@@ -38,7 +38,7 @@ namespace gem5
             basePredictor(params.bi_mode_predictor),
             bufferSize(params.circular_buffer_size)
         {
-             DPRINTF(TemporalStream, "Start initialization\n");
+            DPRINTF(TemporalStream, "Start initialization\n");
             replayFlag = false;
 
             bufferHead = 0;
@@ -91,7 +91,7 @@ namespace gem5
 
             history->baseOutcome = baseOutcome;
             history->tsOutcome = tsOutcome;
-            bp_history = (void *)history;
+            bp_history = static_cast<void*>(history);
             DPRINTF(TemporalStream, "Exit lookup \n");
             return tsOutcome;
         }
@@ -108,7 +108,7 @@ namespace gem5
             history->tsOutcome = true;
             // void *baseHistory = (history->baseHistory);
             basePredictor->uncondBranch(tid, pc, history->baseHistory);
-            bp_history = (void *)history;
+            bp_history = static_cast<void*>(history);
             DPRINTF(TemporalStream, "TShistory %p\n", history);
             DPRINTF(TemporalStream, "baseHistory %p\n", history->baseHistory);
             DPRINTF(TemporalStream, "Exit uncondBranch \n");
@@ -163,7 +163,9 @@ namespace gem5
                 headTable[tid] = bufferTail;
             }
             // history->baseHistory deleted during basePredictor->update
+            DPRINTF(TemporalStream, "Before delete history \n");
             delete history;
+            DPRINTF(TemporalStream, "After delete history \n");
             DPRINTF(TemporalStream, "Exit update \n");
         }
 
