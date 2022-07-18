@@ -76,7 +76,7 @@ namespace gem5
             history->baseOutcome = baseOutcome;
             history->tsOutcome = tsOutcome;
             bp_history = (void *)history;
-            return tsPred;
+            return tsOutcome;
         }
 
         void TemporalStreamBP::uncondBranch(
@@ -116,7 +116,7 @@ namespace gem5
 
             if (history->tsOutcome != taken)
                 replayFlag = false;
-            if (baseOutcome != taken) {
+            if (history->baseOutcome != taken) {
                 // FIXME: should we concatenate tid with
                 // something in the GHR here?
                 // in that case might need to change the header:
@@ -132,7 +132,7 @@ namespace gem5
                     bufferHead = iter->second;
                     replayFlag = true;
                 }
-                headTable[tid] = tail;
+                headTable[tid] = bufferTail;
             }
 
             delete history;
