@@ -52,7 +52,7 @@ namespace gem5
             DPRINTF(TemporalStream, "Initialized successfully\n");
             DPRINTF(TemporalStream, "basePredictor: %p\n", basePredictor);
             DPRINTF(TemporalStream, "basePredictor: %s\n",
-            typeid(basePredictor).name())
+            typeid(basePredictor).name());
         }
 
         void TemporalStreamBP::btbUpdate(
