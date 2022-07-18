@@ -4,6 +4,8 @@
 
 #include "base/bitfield.hh"
 #include "base/intmath.hh"
+#include "base/trace.hh"
+#include "debug/TemporalStream.hh"
 
 #define HTB_INIT 2
 /*
@@ -36,6 +38,7 @@ namespace gem5
             basePredictor(params.bi_mode_predictor),
             bufferSize(params.circular_buffer_size)
         {
+             DPRINTF(TemporalStream, "Start initialization\n");
             replayFlag = false;
 
             bufferHead = 0;
@@ -46,6 +49,7 @@ namespace gem5
             circularBuffer.resize(bufferSize);
             for (int i = 0; i < bufferSize; ++i)
                 circularBuffer[i] = HTB_INIT;
+            DPRINTF(TemporalStream, "Initialized successfully\n");
         }
 
         void TemporalStreamBP::btbUpdate(
@@ -54,10 +58,14 @@ namespace gem5
             void*& bp_history
         )
         {
+            DPRINTF(TemporalStream, "Enter btbUpdate \n");
+            // TSHistory *history = static_cast<TSHistory *>(bp_history);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             void *baseHistory = (history->baseHistory);
 
             basePredictor->btbUpdate(tid, branch_addr, baseHistory);
+            DPRINTF(TemporalStream, "Exit btbUpdate \n");
+
         }
 
         bool TemporalStreamBP::lookup(
@@ -66,6 +74,7 @@ namespace gem5
             void*& bp_history
         )
         {
+            DPRINTF(TemporalStream, "Enter lookup \n");
             TSHistory *history = new TSHistory;
             void* baseHistory;
             bool baseOutcome = basePredictor->lookup(
@@ -82,6 +91,7 @@ namespace gem5
             history->baseOutcome = baseOutcome;
             history->tsOutcome = tsOutcome;
             bp_history = (void *)history;
+            DPRINTF(TemporalStream, "Exit lookup \n");
             return tsOutcome;
         }
 
@@ -91,9 +101,11 @@ namespace gem5
             void*& bp_history
         )
         {
+            DPRINTF(TemporalStream, "Enter uncondBranch \n");
             TSHistory *history = new TSHistory;
             void *baseHistory = (history->baseHistory);
             basePredictor->uncondBranch(tid, pc, baseHistory);
+            DPRINTF(TemporalStream, "Exit uncondBranch \n");
         }
 
         void TemporalStreamBP::update(
@@ -106,9 +118,12 @@ namespace gem5
             Addr corrTarget
         )
         {
-
+            DPRINTF(TemporalStream, "Enter update \n");
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             void *baseHistory = (history->baseHistory);
+            DPRINTF(TemporalStream, "baseHistory: %p\n", baseHistory);
+            DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
+
             assert(baseHistory);
 
             basePredictor->update(
@@ -116,10 +131,11 @@ namespace gem5
                 baseHistory, squashed,
                 inst, corrTarget
             );
-
+            DPRINTF(TemporalStream, "basePredictor update complete");
             circularBuffer[
                 ++bufferTail%bufferSize
             ] = (history->baseOutcome==taken);
+            DPRINTF(TemporalStream, "circularBuffer update complete");
 
             if (history->tsOutcome != taken)
                 replayFlag = false;
@@ -143,6 +159,7 @@ namespace gem5
             }
 
             delete history;
+            DPRINTF(TemporalStream, "Exit update \n");
         }
 
         void TemporalStreamBP::squash(
@@ -150,11 +167,13 @@ namespace gem5
             void* bp_history
         )
         {
+            DPRINTF(TemporalStream, "Enter squash \n");
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             void *baseHistory = (history->baseHistory);
 
             basePredictor->squash(tid, baseHistory);
             delete history;
+            DPRINTF(TemporalStream, "Exit squash \n");
         }
 
     } // namespace branch_prediction

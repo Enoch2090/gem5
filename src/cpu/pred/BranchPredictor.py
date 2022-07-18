@@ -768,8 +768,11 @@ class TemporalStreamBP(BranchPredictor):
     cxx_header = "cpu/pred/temporal_stream.hh"
 
     # change here if want to use another base predictor.
+    bimodeBP = BiModeBP()
+    bimodeBP.globalPredictorSize = 512
+    bimodeBP.choicePredictorSize = 512
     bi_mode_predictor = Param.BiModeBP(
-        BiModeBP(),
+        bimodeBP,
         "BiMode predictor"
     )
 
