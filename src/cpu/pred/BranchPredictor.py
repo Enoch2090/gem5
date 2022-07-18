@@ -761,3 +761,20 @@ class MultiperspectivePerceptronTAGE8KB(MultiperspectivePerceptronTAGE):
     tage = MPP_TAGE_8KB()
     loop_predictor = MPP_LoopPredictor_8KB()
     statistical_corrector = MPP_StatisticalCorrector_8KB()
+
+class TemporalStreamPredictor(BranchPredictor):
+    type = 'TemporalStream'
+    cxx_class = 'gem5::branch_prediction::TemporalStreamBP'
+    cxx_header = "cpu/pred/temporal_stream.hh"
+
+    # change here if want to use another base predictor.
+    bi_mode_predictor = Param.BiModeBP(
+        BiModeBP(),
+        "BiMode predictor"
+    )
+
+    # max size of unsigned int in cpp. hopefully that works as "inf".
+    circular_buffer_size = Param.Unsigned(
+        4_294_967_295,
+        "Max size of the circular replay buffer"
+    )
