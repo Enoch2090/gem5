@@ -15,6 +15,12 @@ allocates a new TSHistory and save
     it to bp_history.
 - since we use a base predictor, we use TSHistory->baseHistory to
     function as bp_history for the base predictor.
+- for most of the methods, we simply call the corresponding
+    method of the base predictor.
+- only for update & lookup, there's additional work
+    related with the TemporalStreamBP
+- FIXME: not sure whether to handle the TS circular
+    buffer in uncondBranch()
 */
 namespace gem5
 {
