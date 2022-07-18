@@ -166,7 +166,8 @@ namespace gem5
                 headTable[tid] = bufferTail;
             }
             // history->baseHistory deleted during basePredictor->update
-            delete history;
+            if (!squashed)
+                delete history;
             DPRINTF(TemporalStream, "Exit update \n");
         }
 
