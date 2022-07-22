@@ -5,8 +5,9 @@
 
 #include "base/sat_counter.hh"
 #include "base/types.hh"
-#include "cpu/pred/bi_mode.hh"
+// #include "cpu/pred/bi_mode.hh"
 #include "cpu/pred/bpred_unit.hh"
+#include "cpu/pred/ltage.hh"
 #include "params/TemporalStreamBP.hh"
 
 #define TS_KEY_SIZE (140 + 32)
