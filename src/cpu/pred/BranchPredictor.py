@@ -768,21 +768,21 @@ class TemporalStreamBP(BranchPredictor):
     cxx_header = "cpu/pred/temporal_stream.hh"
 
     # change here if want to use another base predictor.
-    # bimodeBP = BiModeBP()
-    # bimodeBP.globalPredictorSize = 512
-    # bimodeBP.choicePredictorSize = 512
-    # base_predictor = Param.BiModeBP(
-    #     bimodeBP,
-    #     "BiMode predictor"
-    # )
-    LTAGEBP = LTAGE()
-    base_predictor = Param.LTAGE(
-        LTAGEBP,
-        "LTAGE predictor"
+    bimodeBP = BiModeBP()
+    bimodeBP.globalPredictorSize = 512
+    bimodeBP.choicePredictorSize = 512
+    base_predictor = Param.BiModeBP(
+        bimodeBP,
+        "BiMode predictor"
     )
+    # LTAGEBP = LTAGE()
+    # base_predictor = Param.LTAGE(
+    #     LTAGEBP,
+    #     "LTAGE predictor"
+    # )
 
     # max size of the circular buffer
     circular_buffer_size = Param.Unsigned(
-        65536,
+        65536 * 1024,
         "Max size of the circular replay buffer"
     )
