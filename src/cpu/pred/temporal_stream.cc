@@ -35,7 +35,7 @@ namespace gem5
             // initialted in BranchPredictor.py::TemporalStreamPredictor.
             BPredUnit(params),
             // also change here if want to use another base predictor.
-            basePredictor(params.bi_mode_predictor),
+            basePredictor(params.base_predictor),
             bufferSize(params.circular_buffer_size)
         {
             DPRINTF(TemporalStream, "Start initialization\n");

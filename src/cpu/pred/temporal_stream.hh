@@ -97,7 +97,8 @@ namespace gem5
 
 
       // change here if using another base predictor
-      BiModeBP* basePredictor;
+      // BiModeBP* basePredictor;
+      LTAGE* basePredictor;
 
       // replay flag of the temporal stream BP.
       bool replayFlag;
