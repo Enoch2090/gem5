@@ -110,7 +110,7 @@ namespace gem5
       // uses bufferHead and bufferTail to indicate the circular head and tail.
       std::vector<unsigned> circularBuffer;
 
-      std::map<Addr, unsigned> headTable;
+      std::map<std::bitset<TS_KEY_SIZE>, unsigned> headTable;
 
       std::bitset<TS_KEY_SIZE> ts_gh;
       // size_t is too small for these indexes
