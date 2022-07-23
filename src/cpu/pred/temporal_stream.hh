@@ -15,6 +15,24 @@
 #define TS_KEY_SIZE (140 + 64)
 // params/TemporalStreamBP.h is auto-generated.
 // it should be under build/X86/params
+
+namespace std{
+  template<std::size_t N>
+  struct bitset_less
+  {
+    bool operator() (const std::bitset<N>& x, const std::bitset<N>& y) const
+    {
+      if (N <= 64) return x.to_ulong() < y.to_ulong();
+
+      for (int i = N-1; i >= 0; i--) {
+          if (x[i] && !y[i]) return false;
+          if (!x[i] && y[i]) return true;
+      }
+      return false;
+    }
+  };
+}
+
 namespace gem5
 {
 
