@@ -167,7 +167,7 @@ namespace gem5
                 // in that case might need to change the header:
                 // std::map<ThreadID, unsigned> headTable;
                 // => std::map<SOME_CONCAT_TYPE, unsigned> headTable;
-                std::bitset<TS_KEY_SIZE> idx = ts_idx(PC);
+                std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr);
                 auto iter = headTable.find(idx);
                 if (
                     (iter!=headTable.end())
