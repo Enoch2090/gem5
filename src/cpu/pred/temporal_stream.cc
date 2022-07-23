@@ -148,7 +148,7 @@ namespace gem5
 
             // update_features();
             ts_gh <<= 1;
-            if (resolveDir == TAKEN){
+            if (resolveDir){
                 ts_gh[0] = 1;
             }
             DPRINTF(TemporalStream, "basePredictor update complete\n");
