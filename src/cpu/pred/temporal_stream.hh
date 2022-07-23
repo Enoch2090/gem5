@@ -61,7 +61,7 @@ namespace gem5
        * @param PC The address of the branch.
        * @return The masked bitset.
        */
-      std::bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC);
+      std::bitset<TS_KEY_SIZE> ts_idx(Addr PC);
 
       /**
        * Looks up the given address in the branch predictor and returns
