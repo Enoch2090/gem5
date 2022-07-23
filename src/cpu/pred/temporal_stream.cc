@@ -56,7 +56,7 @@ namespace gem5
             typeid(basePredictor).name());
         }
 
-        std::bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC) {
+        bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC) {
             std::bitset<TS_KEY_SIZE> pc = std::bitset<TS_KEY_SIZE>(PC);
             return pc | (ts_gh << 64);
         }
