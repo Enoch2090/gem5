@@ -163,11 +163,8 @@ namespace gem5
             if (history->tsOutcome != taken)
                 replayFlag = false;
             if (history->baseOutcome != taken) {
-                // FIXME: should we concatenate tid with
-                // something in the GHR here?
-                // in that case might need to change the header:
-                // std::map<ThreadID, unsigned> headTable;
-                // => std::map<SOME_CONCAT_TYPE, unsigned> headTable;
+                // FIXME: concatenated tid with ts_gh
+                // key = key_from_features();
                 std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr);
                 auto iter = headTable.find(idx);
                 if (
