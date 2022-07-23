@@ -7,7 +7,7 @@
 #include "base/trace.hh"
 #include "debug/TemporalStream.hh"
 
-#define HTB_INIT 2
+
 /*
 note:
 - btbUpdate, update & squash all takes a void* bp_history,
@@ -53,6 +53,11 @@ namespace gem5
             DPRINTF(TemporalStream, "basePredictor: %p\n", basePredictor);
             DPRINTF(TemporalStream, "basePredictor: %s\n",
             typeid(basePredictor).name());
+        }
+
+        bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC) {
+            bitset<TS_KEY_SIZE> pc = bitset<TS_KEY_SIZE>(PC);
+            return pc | (ts_gh << 64);
         }
 
         void TemporalStreamBP::btbUpdate(
@@ -134,12 +139,21 @@ namespace gem5
 
             assert(history->baseHistory);
 
+            //update_base_predictor();
             basePredictor->update(
                 tid, branch_addr, taken,
                 history->baseHistory, squashed,
                 inst, corrTarget
             );
+
+            // update_features();
+            ts_gh <<= 1;
+            if (resolveDir == TAKEN){
+                ts_gh[0] = 1;
+            }
             DPRINTF(TemporalStream, "basePredictor update complete\n");
+
+            // update ts
             circularBuffer[
                 ++bufferTail%bufferSize
             ] = (history->baseOutcome==taken);
@@ -153,7 +167,8 @@ namespace gem5
                 // in that case might need to change the header:
                 // std::map<ThreadID, unsigned> headTable;
                 // => std::map<SOME_CONCAT_TYPE, unsigned> headTable;
-                auto iter = headTable.find(branch_addr);
+                bitset<TS_KEY_SIZE> idx = ts_idx(PC);
+                auto iter = headTable.find(idx);
                 if (
                     (iter!=headTable.end())
                  && (!replayFlag)
@@ -163,10 +178,11 @@ namespace gem5
                     bufferHead = iter->second;
                     replayFlag = true;
                 }
-                headTable[branch_addr] = bufferTail;
+                headTable[idx] = bufferTail;
             }
             // history->baseHistory deleted during basePredictor->update
             if (!squashed)
+                // keep history until squash() to delete
                 delete history;
             DPRINTF(TemporalStream, "Exit update \n");
         }

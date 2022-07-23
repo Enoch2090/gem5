@@ -11,7 +11,8 @@
 // #include "cpu/pred/ltage.hh"
 #include "params/TemporalStreamBP.hh"
 
-#define TS_KEY_SIZE (140 + 32)
+#define HTB_INIT 2
+#define TS_KEY_SIZE (140 + 64)
 // params/TemporalStreamBP.h is auto-generated.
 // it should be under build/X86/params
 namespace gem5
