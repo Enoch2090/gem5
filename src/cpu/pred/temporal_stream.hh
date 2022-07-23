@@ -2,6 +2,7 @@
 #define __CPU_TEMPORAL_STREAM_PRED_HH__
 
 #include <bitset>
+#include <map>
 #include <vector>
 
 #include "base/sat_counter.hh"
