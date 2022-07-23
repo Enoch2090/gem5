@@ -57,6 +57,13 @@ namespace gem5
       TemporalStreamBP(const TemporalStreamBPParams& params);
 
       /**
+       * Masks the given PC address to a length of TS_KEY_SIZE bitset.
+       * @param PC The address of the branch.
+       * @return The masked bitset.
+       */
+      std::bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC);
+
+      /**
        * Looks up the given address in the branch predictor and returns
        * a true/false value as to whether it is taken.  Also creates a
        * BPHistory object to store any state it will need on squash/update.

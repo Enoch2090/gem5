@@ -1,5 +1,6 @@
 #include "cpu/pred/temporal_stream.hh"
 
+#include <bitset>
 #include <map>
 
 #include "base/bitfield.hh"
