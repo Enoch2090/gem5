@@ -105,7 +105,7 @@ namespace gem5
             void*& bp_history
         )
         {
-            DPRINTF(TemporalStream, "Enter uncondBranch \n");
+            DPRINTF(TemporalStream, "Enter uncondBranch at Addr=%h\n", pc);
             TSHistory *history = new TSHistory;
             history->baseOutcome = true;
             history->tsOutcome = true;
@@ -127,7 +127,7 @@ namespace gem5
             Addr corrTarget
         )
         {
-            DPRINTF(TemporalStream, "Enter update \n");
+            DPRINTF(TemporalStream, "Enter update at Addr %h \n", branch_addr);
             DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             DPRINTF(TemporalStream, "baseHistory: %p\n", history->baseHistory);
@@ -153,7 +153,7 @@ namespace gem5
                 // in that case might need to change the header:
                 // std::map<ThreadID, unsigned> headTable;
                 // => std::map<SOME_CONCAT_TYPE, unsigned> headTable;
-                auto iter = headTable.find(tid);
+                auto iter = headTable.find(branch_addr);
                 if (
                     (iter!=headTable.end())
                  && (!replayFlag)
@@ -163,7 +163,7 @@ namespace gem5
                     bufferHead = iter->second;
                     replayFlag = true;
                 }
-                headTable[tid] = bufferTail;
+                headTable[branch_addr] = bufferTail;
             }
             // history->baseHistory deleted during basePredictor->update
             if (!squashed)

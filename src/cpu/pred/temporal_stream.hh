@@ -1,6 +1,7 @@
 #ifndef __CPU_TEMPORAL_STREAM_PRED_HH__
 #define __CPU_TEMPORAL_STREAM_PRED_HH__
 
+#include <bitset>
 #include <vector>
 
 #include "base/sat_counter.hh"
@@ -108,7 +109,9 @@ namespace gem5
       // uses bufferHead and bufferTail to indicate the circular head and tail.
       std::vector<unsigned> circularBuffer;
 
-      std::map<ThreadID, unsigned> headTable;
+      std::map<Addr, unsigned> headTable;
+
+      std::bitset<TS_KEY_SIZE> ts_gh;
       // size_t is too small for these indexes
       unsigned bufferHead;
 

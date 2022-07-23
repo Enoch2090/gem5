@@ -783,6 +783,6 @@ class TemporalStreamBP(BranchPredictor):
 
     # max size of the circular buffer
     circular_buffer_size = Param.Unsigned(
-        4294967294,
+        65536 * 1024,
         "Max size of the circular replay buffer"
     )
