@@ -88,6 +88,8 @@ namespace gem5
       // we just pass it along for the base predictor to work.
       // other info are all stored inside TSHistory along with *baseHistory.
 
+
+
       struct TSHistory
       {
         void *baseHistory;
@@ -106,7 +108,7 @@ namespace gem5
       // uses bufferHead and bufferTail to indicate the circular head and tail.
       std::vector<unsigned> circularBuffer;
 
-      std::map<ThreadID, unsigned> headTable;
+      std::map<unsigned long long, unsigned> headTable;
       // size_t is too small for these indexes
       unsigned bufferHead;
 

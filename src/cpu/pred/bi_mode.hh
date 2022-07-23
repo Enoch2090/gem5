@@ -67,8 +67,7 @@ class BiModeBP : public BPredUnit
     void btbUpdate(ThreadID tid, Addr branch_addr, void * &bp_history);
     void update(ThreadID tid, Addr branch_addr, bool taken, void *bp_history,
                 bool squashed, const StaticInstPtr & inst, Addr corrTarget);
-
-  private:
+    unsigned getGHR(ThreadID tid);
     void updateGlobalHistReg(ThreadID tid, bool taken);
 
     struct BPHistory

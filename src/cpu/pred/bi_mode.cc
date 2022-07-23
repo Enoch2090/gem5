@@ -148,6 +148,10 @@ BiModeBP::btbUpdate(ThreadID tid, Addr branchAddr, void * &bpHistory)
     globalHistoryReg[tid] &= (historyRegisterMask & ~1ULL);
 }
 
+unsigned
+BiModeBP::getGHR(ThreadID tid){
+    return globalHistoryReg[tid];
+}
 /* Only the selected direction predictor will be updated with the final
  * outcome; the status of the unselected one will not be altered. The choice
  * predictor is always updated with the branch outcome, except when the
@@ -230,6 +234,7 @@ BiModeBP::updateGlobalHistReg(ThreadID tid, bool taken)
     globalHistoryReg[tid] = taken ? (globalHistoryReg[tid] << 1) | 1 :
                                (globalHistoryReg[tid] << 1);
     globalHistoryReg[tid] &= historyRegisterMask;
+
 }
 
 } // namespace branch_prediction

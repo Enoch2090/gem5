@@ -80,9 +80,10 @@ system.mem_mode = 'timing'               # Use timing accesses
 system.mem_ranges = [AddrRange('512MB')] # Create an address range
 
 # Create a simple CPU
-temporalStreamBP = TemporalStreamBP()
-temporalStreamBP.circular_buffer_size = 67108864
-system.cpu = DerivO3CPU(branchPred=TemporalStreamBP())
+bimodeBP = BiModeBP()
+bimodeBP.globalPredictorSize = 512
+bimodeBP.choicePredictorSize = 512
+system.cpu = DerivO3CPU(branchPred=bimodeBP)
 
 # Create an L1 instruction and data cache
 system.cpu.icache = L1ICache(args)
