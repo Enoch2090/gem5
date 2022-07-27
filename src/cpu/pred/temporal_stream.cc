@@ -149,7 +149,7 @@ namespace gem5
 
             // update_features();
             ts_gh <<= 1;
-            if (history->tsOutcome){
+            if (taken){
                 ts_gh[0] = 1;
             }
             DPRINTF(TemporalStream, "basePredictor update complete\n");
@@ -160,7 +160,7 @@ namespace gem5
             ] = (history->baseOutcome==taken);
             DPRINTF(TemporalStream, "circularBuffer update complete\n");
 
-            if (history->tsOutcome != taken)
+            if (replayFlag && history->tsOutcome != taken)
                 replayFlag = false;
             if (history->baseOutcome != taken) {
                 // FIXME: concatenated tid with ts_gh
