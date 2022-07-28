@@ -161,7 +161,8 @@ namespace gem5
             //     ++bufferTail%bufferSize
             // ] = (history->baseOutcome==taken);
             circularBuffer.push_back(history->baseOutcome==taken);
-            bufferTail = circularBuffer.end() - 1;
+            bufferTail = circularBuffer.end();
+            --bufferTail;
 
             DPRINTF(TemporalStream, "circularBuffer update complete\n");
 
