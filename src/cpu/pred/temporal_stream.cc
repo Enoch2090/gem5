@@ -180,7 +180,7 @@ namespace gem5
                     auto iter = headTable.find(idx);
                     if (
                        (iter!=headTable.end())
-                    && (iter->second!=HTB_INIT)
+                    // && (iter->second!=HTB_INIT)
                     ){
                         bufferHead = iter->second;
                         replayFlag = true;
