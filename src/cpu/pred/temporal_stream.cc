@@ -103,6 +103,9 @@ namespace gem5
                 else
                     tsOutcome = baseOutcome;
             }
+            else {
+                tsOutcome = baseOutcome;
+            }
             history->baseOutcome = baseOutcome;
             history->tsOutcome = tsOutcome;
             bp_history = static_cast<void*>(history);
