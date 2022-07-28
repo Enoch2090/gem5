@@ -157,6 +157,9 @@ namespace gem5
                 inst, corrTarget
             );
 
+            // don't update ts
+            // if history is an uncond br.
+            // *tiny improvement in MPKI.
             if (!history->uncond){
                 // update_features();
                 ts_gh <<= 1;
