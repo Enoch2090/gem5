@@ -134,7 +134,7 @@ namespace gem5
 
       // circular buffer maintained in the temporal stream BP,
       // uses bufferHead and bufferTail to indicate the circular head and tail.
-      std::vector<unsigned> circularBuffer;
+      std::vector<char> circularBuffer;
 
       std::map<
         std::bitset<TS_KEY_SIZE>,
@@ -143,9 +143,11 @@ namespace gem5
 
       std::bitset<TS_KEY_SIZE> ts_gh;
       // size_t is too small for these indexes
-      unsigned bufferHead;
+      // unsigned bufferHead;
+      std::vector<char>::iterator bufferHead;
 
-      unsigned bufferTail;
+      // unsigned bufferTail;
+      std::vector<char>::iterator bufferTail;
 
       unsigned bufferSize;
 

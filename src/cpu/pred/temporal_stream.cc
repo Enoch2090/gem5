@@ -42,9 +42,9 @@ namespace gem5
             DPRINTF(TemporalStream, "Start initialization\n");
             replayFlag = false;
 
-            bufferHead = 0;
+            // bufferHead = 0;
 
-            bufferTail = 0;
+            // bufferTail = 0;
 
             // setup the circular buffer
             // circularBuffer.resize(bufferSize);
@@ -95,11 +95,14 @@ namespace gem5
 
             bool tsOutcome;
 
-            if (replayFlag && circularBuffer[bufferHead++%bufferSize]==0)
-                tsOutcome = !baseOutcome;
-            else
-                tsOutcome = baseOutcome;
-
+            // if (replayFlag && circularBuffer[bufferHead++%bufferSize]==0)
+            if (replayFlag) {
+                ++bufferHead;
+                if (!*bufferHead)
+                    tsOutcome = !baseOutcome;
+                else
+                    tsOutcome = baseOutcome;
+            }
             history->baseOutcome = baseOutcome;
             history->tsOutcome = tsOutcome;
             bp_history = static_cast<void*>(history);
