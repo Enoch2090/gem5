@@ -99,9 +99,11 @@ namespace gem5
             if (replayFlag) {
                 ++bufferHead;
                 if (!*bufferHead)
-                    tsOutcome = !baseOutcome;
+                    // tsOutcome = !baseOutcome;
+                    tsOutcome = false;
                 else
-                    tsOutcome = baseOutcome;
+                    // tsOutcome = baseOutcome;
+                    tsOutcome = true;
             }
             else {
                 tsOutcome = baseOutcome;
@@ -172,7 +174,7 @@ namespace gem5
                 // circularBuffer[
                 //     ++bufferTail%bufferSize
                 // ] = (history->baseOutcome==taken);
-                circularBuffer.push_back(history->baseOutcome==taken);
+                circularBuffer.push_back(taken);
                 bufferTail = circularBuffer.end();
                 --bufferTail;
 
