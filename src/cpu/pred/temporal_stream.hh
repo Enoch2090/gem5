@@ -122,6 +122,7 @@ namespace gem5
         void *baseHistory;
         bool baseOutcome;
         bool tsOutcome;
+        bool uncond;
       };
 
 

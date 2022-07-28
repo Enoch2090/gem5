@@ -108,6 +108,7 @@ namespace gem5
             }
             history->baseOutcome = baseOutcome;
             history->tsOutcome = tsOutcome;
+            history->uncond = false;
             bp_history = static_cast<void*>(history);
             DPRINTF(TemporalStream, "Exit lookup \n");
             return tsOutcome;
@@ -123,6 +124,7 @@ namespace gem5
             TSHistory *history = new TSHistory;
             history->baseOutcome = true;
             history->tsOutcome = true;
+            history->uncond = true;
             // void *baseHistory = (history->baseHistory);
             basePredictor->uncondBranch(tid, pc, history->baseHistory);
             bp_history = static_cast<void*>(history);
@@ -155,58 +157,61 @@ namespace gem5
                 inst, corrTarget
             );
 
-            // update_features();
-            ts_gh <<= 1;
-            if (taken){
-                ts_gh[0] = 1;
-            }
-            DPRINTF(TemporalStream, "basePredictor update complete\n");
-
-            // update ts
-            // circularBuffer[
-            //     ++bufferTail%bufferSize
-            // ] = (history->baseOutcome==taken);
-            circularBuffer.push_back(history->baseOutcome==taken);
-            bufferTail = circularBuffer.end();
-            --bufferTail;
-
-            DPRINTF(TemporalStream, "circularBuffer update complete\n");
-
-            if (replayFlag && history->tsOutcome != taken)
-                replayFlag = false;
-            if (history->baseOutcome != taken) {
-                // FIXME: concatenated tid with ts_gh
-                // key = key_from_features();
-                std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr);
-
-                if (!replayFlag) {
-                    auto iter = headTable.find(idx);
-                    if (
-                       (iter!=headTable.end())
-                    // && (iter->second!=HTB_INIT)
-                    ){
-                        bufferHead = iter->second;
-                        replayFlag = true;
-                    }
+            if (!history->uncond){
+                // update_features();
+                ts_gh <<= 1;
+                if (taken){
+                    ts_gh[0] = 1;
                 }
-                // FIXME: in predictor.cc writes
-                // -------------------------
-                // tstable[idx] = ts.end();
-                // --tstable[idx];
-                // -------------------------
-                // this is because they assume
-                // the CB is infinite,
-                // while we have a param SIZE here.
-                // so the tail is maintained by
-                // "++bufferTail%bufferSize" here,
-                // which adds tail by 1 and return it.
-                headTable[idx] = bufferTail;
+                DPRINTF(TemporalStream, "basePredictor update complete\n");
+
+                // update ts
+                // circularBuffer[
+                //     ++bufferTail%bufferSize
+                // ] = (history->baseOutcome==taken);
+                circularBuffer.push_back(history->baseOutcome==taken);
+                bufferTail = circularBuffer.end();
+                --bufferTail;
+
+                DPRINTF(TemporalStream, "circularBuffer update complete\n");
+
+                if (replayFlag && history->tsOutcome != taken)
+                    replayFlag = false;
+                if (history->baseOutcome != taken) {
+                    // FIXME: concatenated tid with ts_gh
+                    // key = key_from_features();
+                    std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr);
+
+                    if (!replayFlag) {
+                        auto iter = headTable.find(idx);
+                        if (
+                        (iter!=headTable.end())
+                        // && (iter->second!=HTB_INIT)
+                        ){
+                            bufferHead = iter->second;
+                            replayFlag = true;
+                        }
+                    }
+                    // FIXME: in predictor.cc writes
+                    // -------------------------
+                    // tstable[idx] = ts.end();
+                    // --tstable[idx];
+                    // -------------------------
+                    // this is because they assume
+                    // the CB is infinite,
+                    // while we have a param SIZE here.
+                    // so the tail is maintained by
+                    // "++bufferTail%bufferSize" here,
+                    // which adds tail by 1 and return it.
+                    headTable[idx] = bufferTail;
+                }
             }
             // history->baseHistory deleted during basePredictor->update
             if (!squashed)
                 // keep history until squash() to delete
                 delete history;
             DPRINTF(TemporalStream, "Exit update \n");
+
         }
 
         void TemporalStreamBP::squash(
