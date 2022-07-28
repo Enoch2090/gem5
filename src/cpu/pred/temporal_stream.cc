@@ -47,9 +47,11 @@ namespace gem5
             bufferTail = 0;
 
             // setup the circular buffer
-            circularBuffer.resize(bufferSize);
-            for (int i = 0; i < bufferSize; ++i)
-                circularBuffer[i] = HTB_INIT;
+            // circularBuffer.resize(bufferSize);
+            bufferSize++;
+            // for (int i = 0; i < bufferSize; ++i)
+            //     circularBuffer[i] = HTB_INIT;
+
             DPRINTF(TemporalStream, "Initialized successfully\n");
             DPRINTF(TemporalStream, "basePredictor: %p\n", basePredictor);
             DPRINTF(TemporalStream, "basePredictor: %s\n",
@@ -155,9 +157,12 @@ namespace gem5
             DPRINTF(TemporalStream, "basePredictor update complete\n");
 
             // update ts
-            circularBuffer[
-                ++bufferTail%bufferSize
-            ] = (history->baseOutcome==taken);
+            // circularBuffer[
+            //     ++bufferTail%bufferSize
+            // ] = (history->baseOutcome==taken);
+            circularBuffer.push_back(history->baseOutcome==taken);
+            bufferTail = circularBuffer.end() - 1;
+
             DPRINTF(TemporalStream, "circularBuffer update complete\n");
 
             if (replayFlag && history->tsOutcome != taken)
@@ -166,16 +171,28 @@ namespace gem5
                 // FIXME: concatenated tid with ts_gh
                 // key = key_from_features();
                 std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr);
-                auto iter = headTable.find(idx);
-                if (
-                    (iter!=headTable.end())
-                 && (!replayFlag)
-                 && (iter->second!=HTB_INIT)
-                )
-                {
-                    bufferHead = iter->second;
-                    replayFlag = true;
+
+                if (!replayFlag) {
+                    auto iter = headTable.find(idx);
+                    if (
+                       (iter!=headTable.end())
+                    && (iter->second!=HTB_INIT)
+                    ){
+                        bufferHead = iter->second;
+                        replayFlag = true;
+                    }
                 }
+                // FIXME: in predictor.cc writes
+                // -------------------------
+                // tstable[idx] = ts.end();
+                // --tstable[idx];
+                // -------------------------
+                // this is because they assume
+                // the CB is infinite,
+                // while we have a param SIZE here.
+                // so the tail is maintained by
+                // "++bufferTail%bufferSize" here,
+                // which adds tail by 1 and return it.
                 headTable[idx] = bufferTail;
             }
             // history->baseHistory deleted during basePredictor->update
