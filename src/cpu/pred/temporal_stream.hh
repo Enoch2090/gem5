@@ -138,7 +138,8 @@ namespace gem5
 
       std::map<
         std::bitset<TS_KEY_SIZE>,
-        unsigned, std::bitset_less<TS_KEY_SIZE>
+        std::vector<char>::iterator,
+        std::bitset_less<TS_KEY_SIZE>
       > headTable;
 
       std::bitset<TS_KEY_SIZE> ts_gh;
