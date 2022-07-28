@@ -13,7 +13,7 @@
 #include "params/TemporalStreamBP.hh"
 
 #define HTB_INIT 2
-#define TS_KEY_SIZE (280 + 64)
+#define TS_KEY_SIZE (140 + 64)
 // params/TemporalStreamBP.h is auto-generated.
 // it should be under build/X86/params
 
