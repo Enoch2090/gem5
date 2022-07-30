@@ -117,6 +117,17 @@ namespace gem5
       // we just pass it along for the base predictor to work.
       // other info are all stored inside TSHistory along with *baseHistory.
 
+
+      class circularBufferEntry
+      {
+        public:
+        bool same;
+        Addr addr;
+        circularBufferEntry(bool _same, Addr _addr):
+        same(_same), addr(_addr){};
+      };
+
+
       struct TSHistory
       {
         void *baseHistory;
@@ -135,21 +146,21 @@ namespace gem5
 
       // circular buffer maintained in the temporal stream BP,
       // uses bufferHead and bufferTail to indicate the circular head and tail.
-      std::vector<char> circularBuffer;
+      std::vector<circularBufferEntry> circularBuffer;
 
       std::map<
         std::bitset<TS_KEY_SIZE>,
-        std::vector<char>::iterator,
+        std::vector<circularBufferEntry>::iterator,
         std::bitset_less<TS_KEY_SIZE>
       > headTable;
 
       std::bitset<TS_KEY_SIZE> ts_gh;
       // size_t is too small for these indexes
       // unsigned bufferHead;
-      std::vector<char>::iterator bufferHead;
+      std::vector<circularBufferEntry>::iterator bufferHead;
 
       // unsigned bufferTail;
-      std::vector<char>::iterator bufferTail;
+      std::vector<circularBufferEntry>::iterator bufferTail;
 
       unsigned bufferSize;
 

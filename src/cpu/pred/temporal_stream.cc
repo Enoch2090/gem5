@@ -97,20 +97,30 @@ namespace gem5
 
             // if (replayFlag && circularBuffer[bufferHead++%bufferSize]==0)
             if (replayFlag) {
+
+                bufferHead++;
+                while (bufferHead != circularBuffer.end()
+                && bufferHead->addr != branch_addr) {
+                    DPRINTF(TemporalStream, "moving forward\n");
+                    DPRINTF(TemporalStream,
+                    "bufferHead-circulerBuffer.end()=%d\n",
+                    bufferHead - circularBuffer.end());
+                    bufferHead++;
+                }
                 if (bufferHead != circularBuffer.end()){
-                    ++bufferHead;
-                    if (!*bufferHead)
-                        // tsOutcome = !baseOutcome;
-                        tsOutcome = false;
+                    if (!bufferHead->same)
+                        tsOutcome = !baseOutcome;
+                        // tsOutcome = false;
                     else
-                        // tsOutcome = baseOutcome;
-                        tsOutcome = true;
+                        tsOutcome = baseOutcome;
+                        // tsOutcome = true;
                 }
                 else{
                     replayFlag = false;
                     tsOutcome = baseOutcome;
                 }
 
+                tsOutcome = baseOutcome;
             }
             else {
                 tsOutcome = baseOutcome;
@@ -177,14 +187,15 @@ namespace gem5
                 // circularBuffer[
                 //     ++bufferTail%bufferSize
                 // ] = (history->baseOutcome==taken);
-                // circularBuffer.push_back(history->baseOutcome==taken);
-                circularBuffer.push_back(taken);
+                circularBuffer.emplace_back(
+                    history->baseOutcome==taken, branch_addr);
+                // circularBuffer.push_back(tasken);
 
                 bufferTail = circularBuffer.end();
                 --bufferTail;
 
                 // DPRINTF(TemporalStream, "circularBuffer update complete\n");
-                if (replayFlag){
+                if (replayFlag && false){
 
                     DPRINTF(TemporalStream, "====================\n");
                     if (history->baseOutcome == history->tsOutcome)
@@ -213,6 +224,9 @@ namespace gem5
                         (iter!=headTable.end())
                         // && (iter->second!=HTB_INIT)
                         ){
+                            DPRINTF(TemporalStream,
+                            "buffer head updated to %d",
+                            iter->second - circularBuffer.end());
                             bufferHead = iter->second;
                             replayFlag = true;
                         }
@@ -246,12 +260,10 @@ namespace gem5
         {
             // DPRINTF(TemporalStream, "Enter squash \n");
             TSHistory *history = static_cast<TSHistory *>(bp_history);
-
             basePredictor->squash(
                 tid,
                 history->baseHistory
             );
-            delete history;
             // DPRINTF(TemporalStream, "Exit squash \n");
         }
 
