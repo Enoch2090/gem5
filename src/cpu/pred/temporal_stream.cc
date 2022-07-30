@@ -69,7 +69,9 @@ namespace gem5
             void*& bp_history
         )
         {
-            DPRINTF(TemporalStream, "Enter btbUpdate \n");
+            DPRINTF(TemporalStream,
+                "tid=%h, PC=%h: Enter btbUpdate \n",
+                tid, branch_addr);
             // TSHistory *history = static_cast<TSHistory *>(bp_history);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             basePredictor->btbUpdate(
@@ -77,7 +79,7 @@ namespace gem5
                 branch_addr,
                 history->baseHistory
             );
-            DPRINTF(TemporalStream, "Exit btbUpdate \n");
+            // DPRINTF(TemporalStream, "Exit btbUpdate \n");
 
         }
 
@@ -87,7 +89,9 @@ namespace gem5
             void*& bp_history
         )
         {
-            DPRINTF(TemporalStream, "Enter lookup \n");
+            DPRINTF(TemporalStream,
+                "tid=%h, PC=%h: Enter lookup \n",
+                tid, branch_addr);
             TSHistory *history = new TSHistory;
             bool baseOutcome = basePredictor->lookup(
                 tid, branch_addr, history->baseHistory
@@ -99,11 +103,9 @@ namespace gem5
             if (replayFlag) {
                 ++bufferHead;
                 if (!*bufferHead)
-                    // tsOutcome = !baseOutcome;
-                    tsOutcome = false;
+                    tsOutcome = !baseOutcome;
                 else
-                    // tsOutcome = baseOutcome;
-                    tsOutcome = true;
+                    tsOutcome = baseOutcome;
             }
             else {
                 tsOutcome = baseOutcome;
@@ -112,7 +114,7 @@ namespace gem5
             history->tsOutcome = tsOutcome;
             history->uncond = false;
             bp_history = static_cast<void*>(history);
-            DPRINTF(TemporalStream, "Exit lookup \n");
+            // DPRINTF(TemporalStream, "Exit lookup \n");
             return tsOutcome;
         }
 
@@ -122,7 +124,9 @@ namespace gem5
             void*& bp_history
         )
         {
-            DPRINTF(TemporalStream, "Enter uncondBranch at Addr=%h\n", pc);
+            DPRINTF(TemporalStream,
+                "tid=%h, PC=%h: Enter uncondBranch\n",
+                tid, pc);
             TSHistory *history = new TSHistory;
             history->baseOutcome = true;
             history->tsOutcome = true;
@@ -145,10 +149,13 @@ namespace gem5
             Addr corrTarget
         )
         {
-            DPRINTF(TemporalStream, "Enter update at Addr %h \n", branch_addr);
-            DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
-            TSHistory *history = static_cast<TSHistory *>(bp_history);
-            DPRINTF(TemporalStream, "baseHistory: %p\n", history->baseHistory);
+            DPRINTF(TemporalStream,
+                "tid=%h, PC=%h: Enter update\n",
+                tid, branch_addr);
+            // DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
+            // TSHistory *history = static_cast<TSHistory *>(bp_history);
+            // DPRINTF(TemporalStream,
+                //"baseHistory: %p\n", history->baseHistory);
 
             assert(history->baseHistory);
 
@@ -174,7 +181,7 @@ namespace gem5
                 // circularBuffer[
                 //     ++bufferTail%bufferSize
                 // ] = (history->baseOutcome==taken);
-                circularBuffer.push_back(taken);
+                circularBuffer.push_back(history->baseOutcome==taken);
                 bufferTail = circularBuffer.end();
                 --bufferTail;
 
@@ -197,6 +204,7 @@ namespace gem5
                             replayFlag = true;
                         }
                     }
+
                     // FIXME: in predictor.cc writes
                     // -------------------------
                     // tstable[idx] = ts.end();
@@ -215,7 +223,7 @@ namespace gem5
             if (!squashed)
                 // keep history until squash() to delete
                 delete history;
-            DPRINTF(TemporalStream, "Exit update \n");
+            DPRINTF(TemporalStream, "%h: Exit update \n", branch_addr);
 
         }
 
@@ -224,7 +232,9 @@ namespace gem5
             void* bp_history
         )
         {
-            DPRINTF(TemporalStream, "Enter squash \n");
+            DPRINTF(TemporalStream,
+                "tid=%h: Enter squash \n",
+                tid);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
 
             basePredictor->squash(
