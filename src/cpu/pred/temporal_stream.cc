@@ -185,7 +185,7 @@ namespace gem5
                 if (taken){
                     ts_gh[0] = 1;
                 }
-                DPRINTF(TemporalStream, "basePredictor update complete\n");
+                // DPRINTF(TemporalStream, "basePredictor update complete\n");
 
                 // update ts
                 // circularBuffer[
@@ -195,7 +195,7 @@ namespace gem5
                 bufferTail = circularBuffer.end();
                 --bufferTail;
 
-                DPRINTF(TemporalStream, "circularBuffer update complete\n");
+                // DPRINTF(TemporalStream, "circularBuffer update complete\n");
 
                 if (replayFlag && history->tsOutcome != taken)
                     replayFlag = false;
