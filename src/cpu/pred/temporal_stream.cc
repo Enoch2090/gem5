@@ -119,6 +119,8 @@ namespace gem5
             bp_history = static_cast<void*>(history);
             DPRINTF(TemporalStream,
                 "tid=%x, PC=%x: lookup generated bp_history@%p \n",
+                (int16_t)tid,
+                (uint64_t)branch_addr,
                 bp_history);
             // DPRINTF(TemporalStream, "Exit lookup \n");
             return tsOutcome;
