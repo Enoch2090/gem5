@@ -224,7 +224,8 @@ namespace gem5
                 }
             }
             // history->baseHistory deleted during basePredictor->update
-            delete history;
+            if (!squashed)
+                delete history;
             DPRINTF(TemporalStream,
                 "tid=%x, PC=%x, trigPC=%x: Exit update\n",
                 (int16_t)tid,
@@ -250,7 +251,7 @@ namespace gem5
                 tid,
                 history->baseHistory
             );
-            // delete history;
+            delete history;
             DPRINTF(TemporalStream, "Exit squash \n");
         }
 
