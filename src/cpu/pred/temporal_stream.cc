@@ -232,8 +232,17 @@ namespace gem5
                 }
             }
             // history->baseHistory deleted during basePredictor->update
-            // if (!squashed)
-            delete history;
+            if (uncondBranch && squashed){
+                DPRINTF(TemporalStream,
+                "tid=%x, PC=%x, trigPC=%x: Skipping uncondBranch\
+                first delete\n",
+                (int16_t)tid,
+                (uint64_t)branch_addr,
+                (uint64_t)history->trigPC);
+            }
+            else {
+                delete history;
+            }
             DPRINTF(TemporalStream,
                 "tid=%x, PC=%x, trigPC=%x: Exit update\n",
                 (int16_t)tid,
