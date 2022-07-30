@@ -156,10 +156,12 @@ namespace gem5
         {
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             DPRINTF(TemporalStream,
-                "tid=%x, PC=%x, trigPC=%x: Enter update \n\t bp_history@%p \n",
+                "tid=%x, PC=%x, trigPC=%x, \
+                squash=%d: Enter update \n\t bp_history@%p \n",
                 (int16_t)tid,
                 (uint64_t)branch_addr,
                 (uint64_t)history->trigPC,
+                squashed,
                 bp_history);
 
             assert(history->baseHistory);
