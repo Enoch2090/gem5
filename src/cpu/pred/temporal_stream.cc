@@ -117,6 +117,9 @@ namespace gem5
             history->uncond = false;
             history->trigPC = branch_addr;
             bp_history = static_cast<void*>(history);
+            DPRINTF(TemporalStream,
+                "tid=%x, PC=%x: lookup generated bp_history@%p \n",
+                bp_history);
             // DPRINTF(TemporalStream, "Exit lookup \n");
             return tsOutcome;
         }
