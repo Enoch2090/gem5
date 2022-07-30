@@ -153,7 +153,7 @@ namespace gem5
                 "tid=%h, PC=%h: Enter update\n",
                 tid, branch_addr);
             // DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
-            // TSHistory *history = static_cast<TSHistory *>(bp_history);
+            TSHistory *history = static_cast<TSHistory *>(bp_history);
             // DPRINTF(TemporalStream,
                 //"baseHistory: %p\n", history->baseHistory);
 
