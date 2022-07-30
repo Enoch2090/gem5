@@ -243,7 +243,7 @@ namespace gem5
             // else {
             //     delete history;
             // }
-            delete history
+            delete history;
             DPRINTF(TemporalStream,
                 "tid=%x, PC=%x, trigPC=%x: Exit update\n",
                 (int16_t)tid,
