@@ -232,8 +232,8 @@ namespace gem5
                 }
             }
             // history->baseHistory deleted during basePredictor->update
-            if (!squashed)
-                delete history;
+            // if (!squashed)
+            delete history;
             DPRINTF(TemporalStream,
                 "tid=%x, PC=%x, trigPC=%x: Exit update\n",
                 (int16_t)tid,
