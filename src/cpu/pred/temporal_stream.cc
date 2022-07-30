@@ -232,7 +232,7 @@ namespace gem5
                 }
             }
             // history->baseHistory deleted during basePredictor->update
-            if (uncondBranch && squashed){
+            if (history->uncond && squashed){
                 DPRINTF(TemporalStream,
                 "tid=%x, PC=%x, trigPC=%x: Skipping uncondBranch\
                 first delete\n",
