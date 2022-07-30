@@ -156,10 +156,11 @@ namespace gem5
         {
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             DPRINTF(TemporalStream,
-                "tid=%x, PC=%x, trigPC=%x: Enter update\n",
+                "tid=%x, PC=%x, trigPC=%x: Enter update \n\t bp_history@%p \n",
                 (int16_t)tid,
                 (uint64_t)branch_addr,
-                (uint64_t)history->trigPC);
+                (uint64_t)history->trigPC,
+                bp_history);
 
             assert(history->baseHistory);
 
@@ -243,9 +244,10 @@ namespace gem5
             TSHistory *history = static_cast<TSHistory *>(bp_history);
 
             DPRINTF(TemporalStream,
-                "tid=%x, PC=%x: Enter squash \n",
+                "tid=%x, PC=%x: Enter squash \n\t bp_hist@%p \n",
                 (int16_t)tid,
-                (uint64_t)history->trigPC);
+                (uint64_t)history->trigPC,
+                bp_history);
 
             basePredictor->squash(
                 tid,
