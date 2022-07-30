@@ -61,7 +61,7 @@ namespace gem5
        * @param PC The address of the branch.
        * @return The masked bitset.
        */
-      std::bitset<TS_KEY_SIZE> ts_idx(Addr PC);
+      std::bitset<TS_KEY_SIZE> ts_idx(Addr PC, ThreadID tid);
 
       /**
        * Looks up the given address in the branch predictor and returns
@@ -139,12 +139,17 @@ namespace gem5
       std::vector<char> circularBuffer;
 
       std::map<
+        ThreadID,
+        std::map<
         std::bitset<TS_KEY_SIZE>,
         std::vector<char>::iterator,
         std::bitset_less<TS_KEY_SIZE>
-      > headTable;
+      > >headTable;
 
-      std::bitset<TS_KEY_SIZE> ts_gh;
+      std::map<
+        ThreadID,
+        std::bitset<TS_KEY_SIZE>
+      > ts_gh;
       // size_t is too small for these indexes
       // unsigned bufferHead;
       std::vector<char>::iterator bufferHead;

@@ -57,9 +57,10 @@ namespace gem5
             typeid(basePredictor).name());
         }
 
-        std::bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC) {
+        std::bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC,
+        ThreadID tid) {
             std::bitset<TS_KEY_SIZE> pc = std::bitset<TS_KEY_SIZE>(PC);
-            return pc | (ts_gh << 64);
+            return pc | (ts_gh[tid] << 64);
         }
 
         void TemporalStreamBP::btbUpdate(
@@ -183,9 +184,10 @@ namespace gem5
             }
 
             // update_features();
-            ts_gh <<= 1;
+            if (ts_gh.find(tid) == ts_gh.end()) ts_gh[tid] = 0;
+            ts_gh[tid] <<= 1;
             if (taken){
-                ts_gh[0] = 1;
+                ts_gh[tid][0] = 1;
             }
             // DPRINTF(TemporalStream, "basePredictor update complete\n");
 
@@ -204,12 +206,12 @@ namespace gem5
             if (history->baseOutcome != taken) {
                 // FIXME: concatenated tid with ts_gh
                 // key = key_from_features();
-                std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr);
+                std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr, tid);
 
                 if (!replayFlag) {
-                    auto iter = headTable.find(idx);
+                    auto iter = headTable[tid].find(idx);
                     if (
-                    (iter!=headTable.end())
+                    (iter!=headTable[tid].end())
                     // && (iter->second!=HTB_INIT)
                     ){
                         bufferHead = iter->second;
@@ -228,7 +230,7 @@ namespace gem5
                 // so the tail is maintained by
                 // "++bufferTail%bufferSize" here,
                 // which adds tail by 1 and return it.
-                headTable[idx] = bufferTail;
+                headTable[tid][idx] = bufferTail;
             }
             // history->baseHistory deleted during basePredictor->update
             // if (history->uncond && squashed){
