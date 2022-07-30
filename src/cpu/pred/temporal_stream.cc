@@ -179,7 +179,7 @@ namespace gem5
 
             if (squashed) {
                 // should do sth?
-                return
+                return;
             }
 
             // update_features();
