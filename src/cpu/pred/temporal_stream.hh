@@ -123,6 +123,7 @@ namespace gem5
         bool baseOutcome;
         bool tsOutcome;
         bool uncond;
+        Addr trigPC;
       };
 
 
