@@ -135,7 +135,7 @@ namespace gem5
             history->baseOutcome = true;
             history->tsOutcome = true;
             history->uncond = true;
-            history->trigPC = branch_addr;
+            history->trigPC = -1;
             // void *baseHistory = (history->baseHistory);
             basePredictor->uncondBranch(tid, pc, history->baseHistory);
             bp_history = static_cast<void*>(history);
