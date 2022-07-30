@@ -71,7 +71,8 @@ namespace gem5
         {
             DPRINTF(TemporalStream,
                 "tid=%h, PC=%h: Enter btbUpdate \n",
-                tid, branch_addr);
+                (uint64_t)tid,
+                (uint64_t)branch_addr);
             // TSHistory *history = static_cast<TSHistory *>(bp_history);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             basePredictor->btbUpdate(
@@ -91,7 +92,8 @@ namespace gem5
         {
             DPRINTF(TemporalStream,
                 "tid=%h, PC=%h: Enter lookup \n",
-                tid, branch_addr);
+                (uint64_t)tid,
+                (uint64_t)branch_addr);
             TSHistory *history = new TSHistory;
             bool baseOutcome = basePredictor->lookup(
                 tid, branch_addr, history->baseHistory
@@ -126,7 +128,8 @@ namespace gem5
         {
             DPRINTF(TemporalStream,
                 "tid=%h, PC=%h: Enter uncondBranch\n",
-                tid, pc);
+                (uint64_t)tid,
+                (uint64_t)pc);
             TSHistory *history = new TSHistory;
             history->baseOutcome = true;
             history->tsOutcome = true;
@@ -151,7 +154,8 @@ namespace gem5
         {
             DPRINTF(TemporalStream,
                 "tid=%h, PC=%h: Enter update\n",
-                tid, branch_addr);
+                (uint64_t)tid,
+                (uint64_t)branch_addr);
             // DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             // DPRINTF(TemporalStream,
@@ -223,7 +227,10 @@ namespace gem5
             if (!squashed)
                 // keep history until squash() to delete
                 delete history;
-            DPRINTF(TemporalStream, "%h: Exit update \n", branch_addr);
+            DPRINTF(TemporalStream,
+                "tid=%h, PC=%h: Exit update\n",
+                (uint64_t)tid,
+                (uint64_t)branch_addr);
 
         }
 
@@ -234,7 +241,7 @@ namespace gem5
         {
             DPRINTF(TemporalStream,
                 "tid=%h: Enter squash \n",
-                tid);
+                (uint64_t)tid);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
 
             basePredictor->squash(
