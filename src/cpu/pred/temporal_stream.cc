@@ -153,9 +153,10 @@ namespace gem5
         )
         {
             DPRINTF(TemporalStream,
-                "tid=%x, PC=%x: Enter update\n",
+                "tid=%x, PC=%x: Enter update, squash=%d\n",
                 (int16_t)tid,
-                (uint64_t)branch_addr);
+                (uint64_t)branch_addr,
+                squashed);
             // DPRINTF(TemporalStream, "bpHistory: %p\n", bp_history);
             TSHistory *history = static_cast<TSHistory *>(bp_history);
             // DPRINTF(TemporalStream,
