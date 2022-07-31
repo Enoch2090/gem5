@@ -7,9 +7,8 @@
 
 #include "base/sat_counter.hh"
 #include "base/types.hh"
-#include "cpu/pred/bi_mode.hh"
+#include "cpu/pred/2bit_local.hh"
 #include "cpu/pred/bpred_unit.hh"
-// #include "cpu/pred/ltage.hh"
 #include "params/TemporalStreamBP.hh"
 
 #define HTB_INIT 2
@@ -128,9 +127,9 @@ namespace gem5
 
 
       // change here if using another base predictor
-      BiModeBP* basePredictor;
+      // BiModeBP* basePredictor;
       // LTAGE* basePredictor;
-
+      LocalBP* basePredictor;
       // replay flag of the temporal stream BP.
       bool replayFlag;
 
