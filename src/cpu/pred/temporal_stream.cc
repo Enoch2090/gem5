@@ -169,7 +169,7 @@ namespace gem5
                 squashed,
                 bp_history);
 
-            assert(history->baseHistory);
+            // assert(history->baseHistory);
 
             //update_base_predictor();
             basePredictor->update(
