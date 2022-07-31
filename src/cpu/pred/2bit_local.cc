@@ -97,7 +97,7 @@ void
 LocalBP::update(ThreadID tid, Addr branch_addr, bool taken, void *bp_history,
                 bool squashed, const StaticInstPtr & inst, Addr corrTarget)
 {
-    assert(bp_history == NULL);
+    // assert(bp_history == NULL);
     unsigned local_predictor_idx;
 
     // No state to restore, and we do not update on the wrong
