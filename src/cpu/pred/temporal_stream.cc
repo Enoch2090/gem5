@@ -58,9 +58,9 @@ namespace gem5
         }
 
         std::bitset<TS_KEY_SIZE> TemporalStreamBP::ts_idx(Addr PC,
-        ThreadID tid) {
+        ThreadID tid, Addr addr) {
             std::bitset<TS_KEY_SIZE> pc = std::bitset<TS_KEY_SIZE>(PC);
-            return pc | (ts_gh[tid] << 64);
+            return pc | (ts_gh[tid][addr] << 64);
         }
 
         void TemporalStreamBP::btbUpdate(
@@ -184,10 +184,13 @@ namespace gem5
             }
 
             // update_features();
-            if (ts_gh.find(tid) == ts_gh.end()) ts_gh[tid] = 0;
-            ts_gh[tid] <<= 1;
+            if (ts_gh.find(tid) == ts_gh.end()
+            || ts_gh[tid].find(branch_addr) == ts_gh[tid].end())
+                ts_gh[tid][branch_addr] = 0;
+
+            ts_gh[tid][branch_addr] <<= 1;
             if (taken){
-                ts_gh[tid][0] = 1;
+                ts_gh[tid][branch_addr][0] = 1;
             }
             // DPRINTF(TemporalStream, "basePredictor update complete\n");
 
@@ -206,7 +209,8 @@ namespace gem5
             if (history->baseOutcome != taken) {
                 // FIXME: concatenated tid with ts_gh
                 // key = key_from_features();
-                std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr, tid);
+                std::bitset<TS_KEY_SIZE> idx = ts_idx(branch_addr,
+                tid, branch_addr);
 
                 if (!replayFlag) {
                     auto iter = headTable[tid].find(idx);
